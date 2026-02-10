@@ -10,15 +10,19 @@ public class Server() {
         serverSocket = new ServerSocket(porta);
     }
 
-/*void scrivi(){
+
+void avvio(){
 }
 
 void leggi(){
+}
+
+void scrivi(){
 }
 
 void chiudi(){
 }
 
 void termina(){
-}*/
+}
 }

@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 
 public class Client {
@@ -8,8 +10,13 @@ public class Client {
 public Client(String nome){
     this.nome=nome;
 }
-int connettiti(String nome, int portaServer){
-
+int connetti(String nomeServer, int portaServer){
+        try {
+            Socket socket = new Socket(nomeServer, portaServer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    return 1;
 }
 
 void scrivi(){
@@ -19,6 +26,7 @@ void leggi(){
 }
 
 void chiudi(){
+    serverSocket.close();
 }
 
 }

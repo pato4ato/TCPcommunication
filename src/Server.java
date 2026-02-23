@@ -1,28 +1,65 @@
-import java.io.IOException;
-import java.net.ServerSocket;
-public class Server() {
+import java.io.*;
+import java.net.*;
+
+public class Server {
+
     private ServerSocket serverSocket;
-    private Socket Socket;
+    private Socket clientSocket;
     private int porta;
 
-    public Server(int porta) throws IOException {
+    private DataInputStream in;
+    private DataOutputStream out;
+
+    public Server(int porta) {
         this.porta = porta;
-        serverSocket = new ServerSocket(porta);
     }
 
+    // Attesa connessione client
+    public Socket attendi() {
+        try {
+            serverSocket = new ServerSocket(porta);
+            System.out.println("Server in attesa sulla porta " + porta);
 
-void avvio(){
-}
+            // handshake TCP
+            clientSocket = serverSocket.accept();
 
-void leggi(){
-}
+            // creazione stream comunicazione
+            in = new DataInputStream(clientSocket.getInputStream());
+            out = new DataOutputStream(clientSocket.getOutputStream());
 
-void scrivi(){
-}
+        } catch (IOException e) {
+            System.out.println("Errore avvio server");
+        }
+        return clientSocket;
+    }
 
-void chiudi(){
-}
+    public void scrivi(String messaggio) {
+        try {
+            out.writeUTF(messaggio);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-void termina(){
-}
+    public String leggi() {
+        try {
+            return in.readUTF();
+        } catch (IOException e) {
+            return "ESCI";
+        }
+    }
+
+    public void chiudi() {
+        try {
+            if (clientSocket != null)
+                clientSocket.close();
+        } catch (IOException e) {}
+    }
+
+    public void termina() {
+        try {
+            if (serverSocket != null)
+                serverSocket.close();
+        } catch (IOException e) {}
+    }
 }

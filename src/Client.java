@@ -1,32 +1,63 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class Client {
-   private String nome;
-    private String colore;
+
+    private String nome;
+    private String genere;
+
     private Socket socket;
+    private DataInputStream in;
+    private DataOutputStream out;
 
-public Client(String nome){
-    this.nome=nome;
-}
-int connetti(String nomeServer, int portaServer){
+    public Client(String nome, String genere) {
+        this.nome = nome;
+        this.genere = genere;
+    }
+
+    // Apertura connessione TCP verso il server
+    public int connetti(String nomeServer, int portaServer) {
         try {
-            Socket socket = new Socket(nomeServer, portaServer);
+            socket = new Socket(nomeServer, portaServer);
+
+            // Creazione canali di comunicazione
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
+
+            return 0;
+
+        } catch (UnknownHostException e) {
+            return 1; // host non trovato
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return 2; // server offline
         }
-    return 1;
-}
+    }
 
-void scrivi(){
-}
+    // Invio messaggio al server
+    public void scrivi(String msg) {
+        try {
+            out.writeUTF(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-void leggi(){
-}
+    // Ricezione risposta server
+    public String leggi() {
+        try {
+            return in.readUTF();
+        } catch (IOException e) {
+            return "Errore di comunicazione";
+        }
+    }
 
-void chiudi(){
-    serverSocket.close();
-}
-
+    // Chiusura connessione
+    public void chiudi() {
+        try {
+            if (socket != null)
+                socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

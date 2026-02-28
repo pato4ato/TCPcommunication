@@ -5,7 +5,6 @@ public class Client {
 
     private String nome;
     private String genere;
-
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -15,25 +14,24 @@ public class Client {
         this.genere = genere;
     }
 
-    // Apertura connessione TCP verso il server
+    // Connessione TCP al server
     public int connetti(String nomeServer, int portaServer) {
         try {
             socket = new Socket(nomeServer, portaServer);
 
-            // Creazione canali di comunicazione
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
             return 0;
 
         } catch (UnknownHostException e) {
-            return 1; // host non trovato
+            return 1;
         } catch (IOException e) {
-            return 2; // server offline
+            return 2;
         }
     }
 
-    // Invio messaggio al server
+    // Invio messaggio
     public void scrivi(String msg) {
         try {
             out.writeUTF(msg);
@@ -42,12 +40,12 @@ public class Client {
         }
     }
 
-    // Ricezione risposta server
+    // Ricezione messaggio
     public String leggi() {
         try {
             return in.readUTF();
         } catch (IOException e) {
-            return "Errore di comunicazione";
+            return "Errore comunicazione";
         }
     }
 
@@ -56,8 +54,6 @@ public class Client {
         try {
             if (socket != null)
                 socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) {}
     }
 }

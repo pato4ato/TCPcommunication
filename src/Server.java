@@ -6,7 +6,6 @@ public class Server {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private int porta;
-
     private DataInputStream in;
     private DataOutputStream out;
 
@@ -14,21 +13,19 @@ public class Server {
         this.porta = porta;
     }
 
-    // Attesa connessione client
+    // Attesa client
     public Socket attendi() {
         try {
             serverSocket = new ServerSocket(porta);
-            System.out.println("Server in attesa sulla porta " + porta);
+            System.out.println("Server in ascolto sulla porta " + porta);
 
-            // handshake TCP
             clientSocket = serverSocket.accept();
 
-            // creazione stream comunicazione
             in = new DataInputStream(clientSocket.getInputStream());
             out = new DataOutputStream(clientSocket.getOutputStream());
 
         } catch (IOException e) {
-            System.out.println("Errore avvio server");
+            System.out.println("Errore server");
         }
         return clientSocket;
     }
@@ -36,16 +33,14 @@ public class Server {
     public void scrivi(String messaggio) {
         try {
             out.writeUTF(messaggio);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) {}
     }
 
     public String leggi() {
         try {
             return in.readUTF();
         } catch (IOException e) {
-            return "ESCI";
+            return "";
         }
     }
 

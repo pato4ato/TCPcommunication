@@ -6,44 +6,24 @@ public class MainClient {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("CLIENT DI MINECRAFT");
-        System.out.print("Inserisci nome del player: ");
-
+        System.out.print("Inserisci nome player: ");
         String nome = scanner.nextLine();
 
         Client client = new Client(nome, "N/D");
 
         if (client.connetti("localhost", 5000) == 0) {
 
-            System.out.println(client.leggi());
+            // invio nome al server
+            client.scrivi(nome);
 
-            boolean attivo = true;
-
-            while (attivo) {
-
-                System.out.print("\nComando > ");
-                String comando = scanner.nextLine();
-
-                client.scrivi(comando);
-
-                if (comando.equalsIgnoreCase("ESCI")) {
-                    System.out.println("Connessione terminata.");
-                    attivo = false;
-                    break;
-                }
-
-                String risposta = client.leggi();
-                System.out.println(risposta);
-
-                if (risposta.contains("FINE")) {
-                    attivo = false;
-                }
-            }
+            // ricezione risposta
+            String risposta = client.leggi();
+            System.out.println(risposta);
 
             client.chiudi();
 
         } else {
-            System.out.println("Impossibile stabilire la connessione.");
+            System.out.println("Connessione fallita.");
         }
 
         scanner.close();
